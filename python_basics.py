@@ -4,40 +4,77 @@ from grader_contracts.python_basics import PositiveIntegerInput, TextInput, Vect
 
 
 def count_vowels(data: TextInput) -> int:
-    text = data.value
-    raise NotImplementedError  # TODO
+    text = data.value.lower()
+    return sum(1 for char in text if char in "aeiou")
 
 
 def has_unique_characters(data: TextInput) -> bool:
     text = data.value
-    raise NotImplementedError  # TODO
+    return len(set(text)) == len(text)
 
 
 def count_one_bits(data: PositiveIntegerInput) -> int:
     number = data.value
-    raise NotImplementedError  # TODO
+    count = 0
+    while number:
+        number &= number - 1
+        count += 1
+    return count
 
 
 def multiplicative_persistence(data: PositiveIntegerInput) -> int:
     number = data.value
-    raise NotImplementedError  # TODO
+    steps = 0
+    while number >= 10:
+        product = 1
+        for digit in str(number):
+            product *= int(digit)
+        number = product
+        steps += 1
+    return steps
 
 
 def mse(data: VectorPairInput) -> float:
     predicted, expected = data.predicted, data.expected
-    raise NotImplementedError  # TODO
+    return sum((x - y) ** 2 for x, y in zip(predicted, expected)) / len(predicted)
 
 
 def prime_factorization(data: PositiveIntegerInput) -> str:
     number = data.value
-    raise NotImplementedError  # TODO
+    if number == 1:
+        return "(1)"
+
+    factors = []
+    divisor = 2
+    while divisor * divisor <= number:
+        if number % divisor == 0:
+            power = 0
+            while number % divisor == 0:
+                number //= divisor
+                power += 1
+            factors.append((divisor, power))
+        divisor = 3 if divisor == 2 else divisor + 2
+
+    if number > 1:
+        factors.append((number, 1))
+
+    return "".join(
+        f"({factor}**{power})" if power > 1 else f"({factor})"
+        for factor, power in factors
+    )
 
 
 def pyramid(data: PositiveIntegerInput) -> int | str:
     cube_count = data.value
-    raise NotImplementedError  # TODO
+    k = 0
+    total = 0
+    while total < cube_count:
+        k += 1
+        total += k * k
+    return k if total == cube_count else "It is impossible"
 
 
 def is_balanced_number(data: PositiveIntegerInput) -> bool:
-    number = data.value
-    raise NotImplementedError  # TODO
+    digits = str(data.value)
+    middle = len(digits) // 2
+    return sum(map(int, digits[:middle])) == sum(map(int, digits[-middle:]))
